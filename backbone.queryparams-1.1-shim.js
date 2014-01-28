@@ -10,7 +10,7 @@ Backbone.History.prototype.navigate = function(fragment, options) {
   if (!Backbone.History.started) return false;
   if (!options || options === true) options = {trigger: !!options};
 
-  var url = this.root + (fragment = this.getFragment(fragment || ''));
+  var url = (this.options.root || this.root) + (fragment = this.getFragment(fragment || ''));
 
   // Removed from the upstream impl:
   // Strip the fragment of the query and hash for matching.
