@@ -10,7 +10,10 @@ Backbone.History.prototype.navigate = function(fragment, options) {
   if (!Backbone.History.started) return false;
   if (!options || options === true) options = {trigger: !!options};
 
-  var url = (this.options.root || this.root) + (fragment = this.getFragment(fragment || ''));
+  // Remove trailing slash if existing to be show query params
+  if (this.root !== '/') this.root = this.root.replace(/\/$/, '');
+
+  var url = this.root + (fragment = this.getFragment(fragment || ''));
 
   // Removed from the upstream impl:
   // Strip the fragment of the query and hash for matching.
@@ -20,7 +23,7 @@ Backbone.History.prototype.navigate = function(fragment, options) {
   this.fragment = fragment;
 
   // Don't include a trailing slash on the root.
-  if (fragment === '' && url !== '/') url = url.slice(0, -1);
+  if (fragment === '' && url !== '/' && url !== this.root) url = url.slice(0, -1);
 
   // If pushState is available, we use it to set the fragment as a real URL.
   if (this._hasPushState) {
@@ -45,3 +48,4 @@ Backbone.History.prototype.navigate = function(fragment, options) {
   }
   if (options.trigger) return this.loadUrl(fragment);
 };
+
